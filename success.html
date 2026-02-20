@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Essential Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>Payment Successful | SGELAR School Shoes Order Confirmation</title>
+    <meta name="description" content="Your SGELAR school shoes order has been confirmed. Thank you for shopping with us. You will receive tracking information shortly.">
+    <meta name="robots" content="noindex, follow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.sgelarshoes.co.za/success.html">
+    
+    <!-- Mobile -->
+    <meta name="theme-color" content="#FDB913">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/img/logo.png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+    
+    <style>
+        .success-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+        }
+        .success-card {
+            background: var(--dark-grey);
+            padding: 60px;
+            border-radius: 20px;
+            max-width: 500px;
+            border: 2px solid var(--yellow);
+        }
+        .success-icon {
+            font-size: 80px;
+            color: #28a745;
+            margin-bottom: 30px;
+        }
+        .success-card h1 {
+            color: var(--yellow);
+            margin-bottom: 20px;
+        }
+        .success-card p {
+            color: #ccc;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+    </style>
+
+    <!-- Google Analytics 4 - Order Confirmation Event -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q0FD7RSMQQ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-Q0FD7RSMQQ', {
+            'send_page_view': true,
+            'page_title': 'Order Success'
+        });
+        
+        // Track successful purchase
+        gtag('event', 'purchase', {
+            'event_category': 'ecommerce',
+            'event_label': 'Order Completed'
+        });
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main Navigation">
+        <a href="index.html" aria-label="SGELAR Shoes Home">
+            <img src="assets/img/logo.png" alt="SGELAR Shoes Logo" style="height: 40px;" width="auto" height="40">
+        </a>
+        <ul class="nav-links" id="nav-links" role="menubar">
+            <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+            <li role="none"><a href="shop.html" role="menuitem">Shop Shoes</a></li>
+            <li role="none"><a href="about.html" role="menuitem">About Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- Success Message -->
+    <main class="success-container">
+        <div class="success-card">
+            <i class="fas fa-check-circle success-icon" aria-hidden="true"></i>
+            <h1>Payment Successful!</h1>
+            <p>Thank you for your order! We've received your payment and will begin processing your order immediately.</p>
+            <p>You will receive a confirmation email with your order details and tracking information shortly.</p>
+            <p style="font-size: 0.9rem; color: #999;">Order Number: <span id="order-number">Loading...</span></p>
+            <a href="shop.html" class="btn" aria-label="Continue shopping for more school shoes">Continue Shopping</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div style="text-align:center; padding: 20px;">
+            <p>&copy; 2024 SGELAR Shoes. Proudly South African 🇿🇦</p>
+        </div>
+    </footer>
+
+    <script>
+        // Display order number from URL parameter if available
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderNum = urlParams.get('order') || 'SGELAR-' + Date.now();
+        document.getElementById('order-number').textContent = orderNum;
+    </script>
+</body>
+</html>

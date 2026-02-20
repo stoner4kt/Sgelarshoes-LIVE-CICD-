@@ -1,0 +1,62 @@
+# robots.txt for SGELAR Shoes - Premium South African School Shoes
+# Website: https://www.sgelarshoes.co.za
+# Last Updated: February 2026
+
+# Allow all search engines to crawl the entire site
+User-agent: *
+Allow: /
+Crawl-delay: 1
+
+# Specific directives for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Googlebot-Image
+Allow: /assets/img/
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# AI/LLM Crawlers - Allow for better visibility
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+# Block specific areas that shouldn't be indexed
+Disallow: /login.html
+Disallow: /cart.html
+Disallow: /success.html
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Sitemap location
+Sitemap: https://www.sgelarshoes.co.za/sitemap.xml
+
+# Host directive (preferred domain)
+Host: https://www.sgelarshoes.co.za
