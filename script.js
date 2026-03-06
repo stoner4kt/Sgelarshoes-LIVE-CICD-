@@ -166,6 +166,10 @@ function renderShop(container) {
 
         snapshot.docs.forEach(d => {
             const data = d.data();
+            if (!data.name) {
+        console.warn("Skipping document missing a name:", d.id);
+        return; // Skip this document and move to the next
+    }
             if (!grouped[data.name]) {
                 grouped[data.name] = {
                     name: data.name,
@@ -181,7 +185,9 @@ function renderShop(container) {
         });
 
         container.innerHTML = Object.values(grouped).map(p => {
-            const safeId = p.name.replace(/\s+/g, "");
+    // If name is missing, use a fallback so the site doesn't crash
+    const productName = p.name || "Unknown Product";
+    const safeId = productName.replace(/\s+/g, "");
             p.variants.sort((a, b) => a.size - b.size);
             const first = p.variants[0];
             const multiple = p.variants.length > 1;
