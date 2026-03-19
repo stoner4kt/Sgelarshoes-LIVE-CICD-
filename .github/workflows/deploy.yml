@@ -1,0 +1,26 @@
+name: 🚀 Deploy to Domains.co.za
+
+on:
+  push:
+    branches:
+      - main  # This ensures it only deploys when you push to the main branch
+
+jobs:
+  web-deploy:
+    name: 🎉 Sync Files
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v3
+
+    - name: 📂 Sync to Server
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: ./  # This tells it to land in the root of your FTP folder
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
