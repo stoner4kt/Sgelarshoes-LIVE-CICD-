@@ -7,12 +7,12 @@
 
   <!-- Homepage - Highest Priority -->
   <url>
-    <loc>https://www.sgelarshoes.co.za/</loc>
+    <loc>https://sgelarshoes.co.za/</loc>
     <lastmod>2026-02-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://www.sgelarshoes.co.za/assets/img/logo.png</image:loc>
+      <image:loc>https://sgelarshoes.co.za/assets/img/logo.png</image:loc>
       <image:title>SGELAR Shoes Logo</image:title>
       <image:caption>Premium South African School Shoes</image:caption>
     </image:image>
@@ -20,7 +20,7 @@
 
   <!-- Shop Page - High Priority -->
   <url>
-    <loc>https://www.sgelarshoes.co.za/shop.html</loc>
+    <loc>https://sgelarshoes.co.za/shop.html</loc>
     <lastmod>2026-02-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
@@ -28,7 +28,7 @@
 
   <!-- About Page -->
   <url>
-    <loc>https://www.sgelarshoes.co.za/about.html</loc>
+    <loc>https://sgelarshoes.co.za/about.html</loc>
     <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -36,7 +36,7 @@
 
   <!-- Policies Page - Important for SEO Trust Signals -->
   <url>
-    <loc>https://www.sgelarshoes.co.za/policies.html</loc>
+    <loc>https://sgelarshoes.co.za/policies.html</loc>
     <lastmod>2026-02-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -44,7 +44,7 @@
 
   <!-- Alternative Index Reference -->
   <url>
-    <loc>https://www.sgelarshoes.co.za/index.html</loc>
+    <loc>https://sgelarshoes.co.za/index.html</loc>
     <lastmod>2026-02-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>

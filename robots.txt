@@ -1,5 +1,5 @@
 # robots.txt for SGELAR Shoes - Premium South African School Shoes
-# Website: https://www.sgelarshoes.co.za
+# Website: https://sgelarshoes.co.za
 # Last Updated: February 2026
 
 # Allow all search engines to crawl the entire site
@@ -59,4 +59,4 @@ Disallow: /*.css$
 Sitemap: https://www.sgelarshoes.co.za/sitemap.xml
 
 # Host directive (preferred domain)
-Host: https://www.sgelarshoes.co.za
+Host: https://sgelarshoes.co.za
