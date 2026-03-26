@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin Dashboard | SGELAR Shoes</title>
+    <link rel="icon" type="image/png" href="assets/img/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --gold:      #FFD700;
+            --gold-hover:#e6c200;
+            --bg:        #000000;
+            --card:      #111111;
+            --dark-grey: #1a1a1a;
+            --muted:     #888888;
+            --border:    rgba(255,215,0,0.15);
+            --font:      'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: #fff; font-family: var(--font); min-height: 100vh; }
+
+        /* ── LOGIN SCREEN ── */
+        #login-screen {
+            position: fixed; inset: 0; background: var(--bg);
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
+        }
+        #login-screen.hidden { display: none; }
+        .login-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 48px 40px; width: 100%; max-width: 400px;
+            text-align: center;
+        }
+        .login-card img { height: 52px; margin-bottom: 24px; }
+        .login-card h2 { color: var(--gold); font-size: 1.4rem; margin-bottom: 8px; }
+        .login-card p  { color: var(--muted); font-size: 0.9rem; margin-bottom: 28px; }
+        .login-card input {
+            width: 100%; padding: 12px 14px; margin-bottom: 14px;
+            background: var(--dark-grey); border: 1px solid var(--border);
+            border-radius: 8px; color: #fff; font-size: 1rem; outline: none;
+        }
+        .login-card input:focus { border-color: var(--gold); }
+        .btn-gold {
+            width: 100%; padding: 13px; background: var(--gold); color: #000;
+            border: none; border-radius: 8px; font-size: 1rem; font-weight: 700;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .btn-gold:hover { background: var(--gold-hover); }
+        .btn-gold:disabled { opacity: 0.6; cursor: not-allowed; }
+        #login-error { color: #ff5555; font-size: 0.88rem; margin-top: 10px; min-height: 20px; }
+
+        /* ── LAYOUT ── */
+        #dashboard { display: none; }
+        #dashboard.visible { display: flex; min-height: 100vh; }
+
+        /* ── SIDEBAR ── */
+        #sidebar {
+            width: 240px; min-height: 100vh; background: var(--card);
+            border-right: 1px solid var(--border); display: flex;
+            flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0;
+            z-index: 200; transition: transform 0.3s;
+        }
+        #sidebar.hidden-mobile { transform: translateX(-100%); }
+        .sidebar-logo {
+            padding: 24px 20px 16px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .sidebar-logo img { height: 36px; }
+        .sidebar-logo span { color: var(--gold); font-weight: 700; font-size: 1.1rem; }
+        .sidebar-nav { flex: 1; padding: 16px 0; }
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 20px; color: #ccc; cursor: pointer;
+            border-left: 3px solid transparent; transition: all 0.15s;
+            font-size: 0.95rem; text-decoration: none;
+        }
+        .nav-item:hover { color: var(--gold); background: rgba(255,215,0,0.05); }
+        .nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(255,215,0,0.08); }
+        .nav-item i { width: 18px; text-align: center; }
+        .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+        .btn-outline-gold {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 10px 14px; border: 1px solid var(--gold); color: var(--gold);
+            background: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem;
+            transition: all 0.2s; text-decoration: none; width: 100%;
+        }
+        .btn-outline-gold:hover { background: rgba(255,215,0,0.1); }
+        .btn-danger {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 10px 14px; border: 1px solid #cc3333; color: #ff5555;
+            background: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem;
+            transition: all 0.2s; width: 100%;
+        }
+        .btn-danger:hover { background: rgba(255,50,50,0.1); }
+
+        /* ── TOPBAR ── */
+        #topbar {
+            position: fixed; top: 0; left: 240px; right: 0; height: 60px;
+            background: var(--card); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; z-index: 100;
+        }
+        #topbar .page-title { font-size: 1.1rem; font-weight: 600; color: var(--gold); }
+        #topbar .admin-email { font-size: 0.85rem; color: var(--muted); }
+        #hamburger-btn {
+            display: none; background: none; border: none; color: #fff;
+            font-size: 1.4rem; cursor: pointer; padding: 4px;
+        }
+
+        /* ── MAIN ── */
+        #main-content { margin-left: 240px; margin-top: 60px; padding: 28px; min-height: calc(100vh - 60px); }
+
+        /* ── CARDS ── */
+        .stat-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 24px;
+        }
+        .stat-card .label { color: var(--muted); font-size: 0.85rem; margin-bottom: 8px; }
+        .stat-card .value { font-size: 2rem; font-weight: 700; color: var(--gold); }
+
+        /* ── TABLES ── */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { text-align: left; padding: 12px 14px; color: var(--muted); font-weight: 600;
+             border-bottom: 1px solid var(--border); white-space: nowrap; }
+        td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block; padding: 3px 10px; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 600; text-transform: capitalize;
+        }
+        .badge-pending  { background: rgba(251,191,36,0.15); color: #fbbf24; }
+        .badge-confirmed{ background: rgba(34,197,94,0.15);  color: #22c55e; }
+        .badge-delivered{ background: rgba(59,130,246,0.15); color: #3b82f6; }
+        .badge-cancelled{ background: rgba(239,68,68,0.15);  color: #ef4444; }
+        .badge-cat      { background: rgba(255,215,0,0.12); color: var(--gold); font-size: 0.75rem; }
+
+        /* ── FORM ── */
+        .form-section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%; padding: 11px 13px; background: var(--dark-grey);
+            border: 1px solid var(--border); border-radius: 8px;
+            color: #fff; font-size: 0.95rem; outline: none; font-family: var(--font);
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus { border-color: var(--gold); }
+        .form-group textarea { min-height: 90px; resize: vertical; }
+        .form-group select option { background: #1a1a1a; }
+
+        /* ── VARIANT ROWS ── */
+        .variant-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+        .variant-row input { flex: 1; }
+        .btn-remove-variant {
+            background: none; border: 1px solid #cc3333; color: #ff5555;
+            border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 0.85rem;
+            transition: background 0.15s;
+        }
+        .btn-remove-variant:hover { background: rgba(255,50,50,0.12); }
+        .btn-add-variant {
+            background: none; border: 1px dashed var(--gold); color: var(--gold);
+            border-radius: 8px; padding: 9px 16px; cursor: pointer; font-size: 0.88rem;
+            transition: background 0.15s; margin-top: 4px;
+        }
+        .btn-add-variant:hover { background: rgba(255,215,0,0.07); }
+
+        /* ── UPLOAD ZONE ── */
+        #upload-zone {
+            border: 2px dashed var(--border); border-radius: 10px;
+            padding: 32px; text-align: center; cursor: pointer;
+            transition: border-color 0.2s; background: var(--dark-grey);
+        }
+        #upload-zone:hover { border-color: var(--gold); }
+        #upload-zone i { font-size: 2rem; color: var(--muted); margin-bottom: 10px; }
+        #upload-zone p { color: var(--muted); font-size: 0.88rem; }
+        #upload-zone img { max-height: 140px; border-radius: 8px; margin-top: 10px; }
+        .progress-bar-wrap { background: #222; border-radius: 20px; height: 8px; margin-top: 12px; overflow: hidden; display: none; }
+        .progress-bar-fill { height: 100%; background: var(--gold); border-radius: 20px; width: 0%; transition: width 0.2s; }
+        #upload-pct { font-size: 0.82rem; color: var(--muted); margin-top: 6px; }
+
+        /* ── ACTION BUTTONS ── */
+        .btn-edit {
+            padding: 5px 12px; border: 1px solid var(--gold); color: var(--gold);
+            background: none; border-radius: 6px; cursor: pointer; font-size: 0.82rem;
+            transition: background 0.15s; margin-right: 6px;
+        }
+        .btn-edit:hover { background: rgba(255,215,0,0.1); }
+        .btn-del {
+            padding: 5px 12px; border: 1px solid #cc3333; color: #ff5555;
+            background: none; border-radius: 6px; cursor: pointer; font-size: 0.82rem;
+            transition: background 0.15s;
+        }
+        .btn-del:hover { background: rgba(255,50,50,0.1); }
+        .stock-input {
+            width: 72px; padding: 5px 8px; background: var(--dark-grey);
+            border: 1px solid var(--border); border-radius: 6px;
+            color: #fff; font-size: 0.88rem; text-align: center;
+        }
+        .stock-input:focus { border-color: var(--gold); outline: none; }
+
+        /* ── STATUS SELECT in orders ── */
+        .status-select {
+            padding: 5px 8px; background: var(--dark-grey);
+            border: 1px solid var(--border); border-radius: 6px;
+            color: #fff; font-size: 0.82rem; cursor: pointer;
+        }
+        .status-select:focus { outline: none; border-color: var(--gold); }
+
+        /* ── FILTER BUTTONS ── */
+        .filter-btn {
+            padding: 7px 18px; border: 1px solid var(--border); background: none;
+            color: var(--muted); border-radius: 20px; cursor: pointer; font-size: 0.85rem;
+            transition: all 0.15s; margin-right: 8px; margin-bottom: 8px;
+        }
+        .filter-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(255,215,0,0.07); }
+        .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+        /* ── SECTION TITLE ── */
+        .section-title { color: var(--gold); font-size: 1.15rem; font-weight: 700; margin-bottom: 20px; }
+
+        /* ── STATUS MESSAGE ── */
+        #save-status { font-size: 0.88rem; margin-top: 10px; min-height: 20px; }
+        .status-ok  { color: #22c55e; }
+        .status-err { color: #ff5555; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            #sidebar { transform: translateX(-100%); }
+            #sidebar.mobile-open { transform: translateX(0); box-shadow: 4px 0 20px rgba(0,0,0,0.6); }
+            #topbar { left: 0; }
+            #hamburger-btn { display: block; }
+            #main-content { margin-left: 0; padding: 18px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        .overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5); z-index: 150;
+        }
+        .overlay.visible { display: block; }
+    </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     LOGIN SCREEN
+════════════════════════════════════ -->
+<div id="login-screen">
+    <div class="login-card">
+        <img src="assets/img/logo.png" alt="SGELAR Logo">
+        <h2>Admin Login</h2>
+        <p>Sign in with your admin Firebase account</p>
+        <input type="email"    id="login-email"    placeholder="Email address">
+        <input type="password" id="login-password" placeholder="Password">
+        <button class="btn-gold" id="login-btn" onclick="doLogin()">Sign In</button>
+        <div id="login-error"></div>
+    </div>
+</div>
+
+<!-- overlay for mobile sidebar -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- ════════════════════════════════════
+     DASHBOARD
+════════════════════════════════════ -->
+<div id="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar">
+        <div class="sidebar-logo">
+            <img src="assets/img/logo.png" alt="SGELAR">
+            <span>SGELAR Admin</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-item active" onclick="showTab('overview')"  data-tab="overview">
+                <i class="fas fa-chart-bar"></i> Overview
+            </div>
+            <div class="nav-item" onclick="showTab('products')" data-tab="products">
+                <i class="fas fa-shoe-prints"></i> Products
+            </div>
+            <div class="nav-item" onclick="showTab('add-product')" data-tab="add-product">
+                <i class="fas fa-plus-circle"></i> Add Product
+            </div>
+            <div class="nav-item" onclick="showTab('orders')" data-tab="orders">
+                <i class="fas fa-box"></i> Orders
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="index.html" target="_blank" class="btn-outline-gold">
+                <i class="fas fa-external-link-alt"></i> View Site
+            </a>
+            <button class="btn-danger" onclick="doSignOut()">
+                <i class="fas fa-sign-out-alt"></i> Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <!-- TOPBAR -->
+    <div id="topbar">
+        <div style="display:flex;align-items:center;gap:14px;">
+            <button id="hamburger-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+            <span class="page-title" id="page-title">Overview</span>
+        </div>
+        <span class="admin-email" id="topbar-email"></span>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content">
+
+        <!-- ── OVERVIEW TAB ── -->
+        <section id="tab-overview">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-bottom:28px;">
+                <div class="stat-card">
+                    <div class="label"><i class="fas fa-shoe-prints" style="color:var(--gold);margin-right:6px;"></i>Total Products</div>
+                    <div class="value" id="stat-products">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label"><i class="fas fa-clock" style="color:var(--gold);margin-right:6px;"></i>Pending Orders</div>
+                    <div class="value" id="stat-pending">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label"><i class="fas fa-box" style="color:var(--gold);margin-right:6px;"></i>Total Orders</div>
+                    <div class="value" id="stat-orders">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label"><i class="fas fa-rand-sign" style="color:var(--gold);margin-right:6px;"></i>Est. Revenue</div>
+                    <div class="value" id="stat-revenue">—</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">Recent Orders</div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-orders-body">
+                            <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:24px;">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top:16px;">
+                    <button class="btn-outline-gold" style="width:auto;padding:8px 18px;" onclick="showTab('orders')">
+                        <i class="fas fa-arrow-right"></i> View All Orders
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── PRODUCTS TAB ── -->
+        <section id="tab-products" style="display:none;">
+            <div class="form-section">
+                <div class="section-title">All Products</div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price Range</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-body">
+                            <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:24px;">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── ADD PRODUCT TAB ── -->
+        <section id="tab-add-product" style="display:none;">
+            <div class="form-section">
+                <div class="section-title" id="add-product-title">Add New Product</div>
+                <input type="hidden" id="edit-doc-id">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Product Name *</label>
+                        <input type="text" id="prod-name" placeholder="e.g. Sgelar Classic Derby">
+                    </div>
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select id="prod-category">
+                            <option value="">— Select category —</option>
+                            <option value="school-shoes-boys">School Shoes Boys</option>
+                            <option value="school-shoes-girls">School Shoes Girls</option>
+                            <option value="school-shoes-kids">Kids Shoes</option>
+                            <option value="boots">Boots</option>
+                            <option value="sandals">Sandals</option>
+                            <option value="vellies">Vellies</option>
+                            <option value="accessories">Accessories</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="prod-description" placeholder="Short product description…"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Sizes &amp; Prices *</label>
+                    <div id="variants-list"></div>
+                    <button class="btn-add-variant" onclick="addVariantRow()">
+                        <i class="fas fa-plus"></i> Add Size
+                    </button>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Stock Quantity</label>
+                        <input type="number" id="prod-stock" placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Featured on Homepage?</label>
+                        <select id="prod-featured">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Product Image (JPG / PNG / WebP, max 8 MB)</label>
+                    <div id="upload-zone" onclick="document.getElementById('prod-image-input').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to choose an image</p>
+                        <img id="upload-preview" src="" alt="" style="display:none;">
+                    </div>
+                    <input type="file" id="prod-image-input" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="handleImageSelect(this)">
+                    <div class="progress-bar-wrap" id="progress-wrap">
+                        <div class="progress-bar-fill" id="progress-fill"></div>
+                    </div>
+                    <div id="upload-pct"></div>
+                </div>
+
+                <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                    <button class="btn-gold" style="width:auto;padding:12px 28px;" id="save-btn" onclick="saveProduct()">
+                        <i class="fas fa-save"></i> Save Product
+                    </button>
+                    <button class="btn-outline-gold" style="width:auto;padding:12px 24px;" onclick="resetProductForm()">
+                        Reset
+                    </button>
+                </div>
+                <div id="save-status"></div>
+            </div>
+        </section>
+
+        <!-- ── ORDERS TAB ── -->
+        <section id="tab-orders" style="display:none;">
+            <div class="form-section">
+                <div class="section-title">Orders</div>
+                <div style="margin-bottom:18px;">
+                    <button class="filter-btn active" data-filter="all"      onclick="filterOrders('all',this)">All</button>
+                    <button class="filter-btn"         data-filter="pending"  onclick="filterOrders('pending',this)">Pending</button>
+                    <button class="filter-btn"         data-filter="confirmed"onclick="filterOrders('confirmed',this)">Confirmed</button>
+                    <button class="filter-btn"         data-filter="delivered"onclick="filterOrders('delivered',this)">Delivered</button>
+                    <button class="filter-btn"         data-filter="cancelled"onclick="filterOrders('cancelled',this)">Cancelled</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Phone</th>
+                                <th>Items</th>
+                                <th>Shipping</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Update</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-body">
+                            <tr><td colspan="9" style="color:var(--muted);text-align:center;padding:24px;">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- ════════════════════════════════════
+     FIREBASE COMPAT SDKs
+════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<!-- NO firebase-storage-compat.js — images go to Cloudinary -->
+<script src="firebase-config-compat.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  CLOUDINARY CONFIG — fill these in before going live
+// ═══════════════════════════════════════════════════════
+const CLOUDINARY_CLOUD_NAME    = "di5x34yzu";    // e.g. "dxxxxxxxx"
+const CLOUDINARY_UPLOAD_PRESET = "Sgelar shoes"; // must be UNSIGNED
+
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+let allOrders   = [];
+let selectedImageFile = null;
+let editingDocId = null;
+
+// ═══════════════════════════════════════════════════════
+//  AUTH — auto-restore session
+// ═══════════════════════════════════════════════════════
+adminAuth.onAuthStateChanged(async (user) => {
+    if (!user) {
+        showLogin();
+        return;
+    }
+    // Verify UID is in admins collection
+    try {
+        const snap = await adminDb.collection("admins").doc(user.uid).get();
+        if (!snap.exists || snap.data().isAdmin !== true) {
+            await adminAuth.signOut();
+            showLoginError("Access denied — not an admin account.");
+            showLogin();
+            return;
+        }
+        hidLoginShowDash(user);
+    } catch (e) {
+        await adminAuth.signOut();
+        showLoginError("Error verifying admin access.");
+        showLogin();
+    }
+});
+
+function showLogin() {
+    document.getElementById("login-screen").classList.remove("hidden");
+    document.getElementById("dashboard").classList.remove("visible");
+}
+
+function hidLoginShowDash(user) {
+    document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("dashboard").classList.add("visible");
+    document.getElementById("topbar-email").textContent = user.email;
+    loadOverviewStats();
+    loadRecentOrders();
+    loadProducts();
+    loadOrders();
+}
+
+async function doLogin() {
+    const email = document.getElementById("login-email").value.trim();
+    const pass  = document.getElementById("login-password").value;
+    const btn   = document.getElementById("login-btn");
+    showLoginError("");
+    btn.disabled = true;
+    btn.textContent = "Signing in…";
+    try {
+        await adminAuth.signInWithEmailAndPassword(email, pass);
+        // onAuthStateChanged handles the rest
+    } catch (e) {
+        showLoginError(e.message || "Login failed.");
+    }
+    btn.disabled = false;
+    btn.textContent = "Sign In";
+}
+
+function showLoginError(msg) {
+    document.getElementById("login-error").textContent = msg;
+}
+
+async function doSignOut() {
+    await adminAuth.signOut();
+    showLogin();
+}
+
+// ═══════════════════════════════════════════════════════
+//  TAB NAVIGATION
+// ═══════════════════════════════════════════════════════
+const tabTitles = {
+    "overview":    "Overview",
+    "products":    "Products",
+    "add-product": "Add Product",
+    "orders":      "Orders"
+};
+
+function showTab(name) {
+    document.querySelectorAll("[id^='tab-']").forEach(el => el.style.display = "none");
+    document.getElementById("tab-" + name).style.display = "block";
+    document.querySelectorAll(".nav-item").forEach(el => {
+        el.classList.toggle("active", el.dataset.tab === name);
+    });
+    document.getElementById("page-title").textContent = tabTitles[name] || name;
+    closeSidebar();
+}
+
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("mobile-open");
+    document.getElementById("overlay").classList.toggle("visible");
+}
+function closeSidebar() {
+    document.getElementById("sidebar").classList.remove("mobile-open");
+    document.getElementById("overlay").classList.remove("visible");
+}
+
+// ═══════════════════════════════════════════════════════
+//  OVERVIEW STATS
+// ═══════════════════════════════════════════════════════
+async function loadOverviewStats() {
+    try {
+        const [prodSnap, ordSnap] = await Promise.all([
+            adminDb.collection("products").get(),
+            adminDb.collection("orders").get()
+        ]);
+
+        document.getElementById("stat-products").textContent = prodSnap.size;
+        document.getElementById("stat-orders").textContent   = ordSnap.size;
+
+        let pending = 0, revenue = 0;
+        ordSnap.forEach(d => {
+            const data = d.data();
+            if (data.status === "pending") pending++;
+            revenue += Number(data.totalAmount || 0);
+        });
+        document.getElementById("stat-pending").textContent = pending;
+        document.getElementById("stat-revenue").textContent = "R" + revenue.toLocaleString("en-ZA");
+    } catch(e) { console.error(e); }
+}
+
+async function loadRecentOrders() {
+    try {
+        const snap = await adminDb.collection("orders")
+            .orderBy("createdAt", "desc").limit(8).get();
+        const tbody = document.getElementById("recent-orders-body");
+        if (snap.empty) { tbody.innerHTML = `<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:20px;">No orders yet.</td></tr>`; return; }
+        tbody.innerHTML = snap.docs.map(d => {
+            const o = d.data();
+            const date = o.createdAt ? new Date(o.createdAt.toDate()).toLocaleDateString("en-ZA") : "—";
+            return `<tr>
+                <td style="font-family:monospace;font-size:0.82rem;">${d.id.slice(0,10)}</td>
+                <td>${o.customerName || o.customer_name || "—"}</td>
+                <td>R${o.totalAmount || 0}</td>
+                <td><span class="badge badge-${o.status || 'pending'}">${o.status || "pending"}</span></td>
+                <td>${date}</td>
+            </tr>`;
+        }).join("");
+    } catch(e) { console.error(e); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  PRODUCTS
+// ═══════════════════════════════════════════════════════
+async function loadProducts() {
+    const tbody = document.getElementById("products-body");
+    try {
+        const snap = await adminDb.collection("products")
+            .orderBy("createdAt", "desc").get();
+        if (snap.empty) {
+            tbody.innerHTML = `<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px;">No products found. Add your first product!</td></tr>`;
+            return;
+        }
+        tbody.innerHTML = snap.docs.map(d => {
+            const p = d.data();
+            const imgSrc = p.imageUrl || `https://placehold.co/60x60/FFD700/000?text=S`;
+            const variants = p.variants || [{ size: "Standard", price: p.price || 0 }];
+            const prices = variants.map(v => v.price).filter(Boolean);
+            const priceRange = prices.length > 1
+                ? `R${Math.min(...prices)}–R${Math.max(...prices)}`
+                : (prices[0] ? `R${prices[0]}` : "—");
+            const sizes = variants.map(v => v.size || "Std").join(", ");
+            const catLabel = (p.category || "").replace(/-/g," ");
+            return `<tr>
+                <td><img src="${imgSrc}" style="width:52px;height:52px;object-fit:cover;border-radius:6px;border:1px solid var(--border);" onerror="this.src='https://placehold.co/60x60/FFD700/000?text=S'"></td>
+                <td>
+                    <div style="font-weight:600;">${p.name || "—"}</div>
+                    <div style="color:var(--muted);font-size:0.8rem;">${(p.description||"").slice(0,60)}${(p.description||"").length>60?"…":""}</div>
+                </td>
+                <td><span class="badge badge-cat">${catLabel || "—"}</span></td>
+                <td>${priceRange}</td>
+                <td><input type="number" class="stock-input" value="${p.stock||0}" onchange="updateStock('${d.id}',this.value)" min="0"></td>
+                <td>
+                    <button class="btn-edit" onclick="editProduct('${d.id}')"><i class="fas fa-edit"></i> Edit</button>
+                    <button class="btn-del"  onclick="deleteProduct('${d.id}','${(p.name||"").replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`;
+        }).join("");
+    } catch(e) {
+        console.error(e);
+        tbody.innerHTML = `<tr><td colspan="6" style="color:#ff5555;padding:20px;">Error loading products: ${e.message}</td></tr>`;
+    }
+}
+
+async function updateStock(docId, val) {
+    try {
+        await adminDb.collection("products").doc(docId).update({
+            stock: parseInt(val) || 0,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+    } catch(e) { alert("Failed to update stock: " + e.message); }
+}
+
+async function deleteProduct(docId, name) {
+    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    try {
+        await adminDb.collection("products").doc(docId).delete();
+        loadProducts();
+        loadOverviewStats();
+    } catch(e) { alert("Error deleting: " + e.message); }
+}
+
+async function editProduct(docId) {
+    try {
+        const snap = await adminDb.collection("products").doc(docId).get();
+        if (!snap.exists) return alert("Product not found.");
+        const p = snap.data();
+
+        resetProductForm(false);
+        editingDocId = docId;
+        document.getElementById("edit-doc-id").value = docId;
+        document.getElementById("add-product-title").textContent = "Edit Product";
+        document.getElementById("prod-name").value         = p.name || "";
+        document.getElementById("prod-category").value     = p.category || "";
+        document.getElementById("prod-description").value  = p.description || "";
+        document.getElementById("prod-stock").value        = p.stock || 0;
+        document.getElementById("prod-featured").value     = String(p.featured || false);
+
+        // Clear variants and repopulate
+        document.getElementById("variants-list").innerHTML = "";
+        const variants = p.variants || [{ size: "", price: p.price || 0 }];
+        variants.forEach(v => addVariantRow(v.size, v.price));
+
+        if (p.imageUrl) {
+            const preview = document.getElementById("upload-preview");
+            preview.src = p.imageUrl;
+            preview.style.display = "block";
+            document.querySelector("#upload-zone p").textContent = "Click to change image";
+        }
+
+        showTab("add-product");
+    } catch(e) { alert("Error loading product: " + e.message); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  ADD / EDIT PRODUCT FORM
+// ═══════════════════════════════════════════════════════
+function addVariantRow(size = "", price = "") {
+    const row = document.createElement("div");
+    row.className = "variant-row";
+    row.innerHTML = `
+        <input type="text"   placeholder="Size (e.g. 4 or UK 4)" value="${size}">
+        <input type="number" placeholder="Price (R)" value="${price}" min="0">
+        <button class="btn-remove-variant" onclick="this.parentElement.remove()">✕</button>
+    `;
+    document.getElementById("variants-list").appendChild(row);
+}
+
+// Start with one blank row on load
+document.addEventListener("DOMContentLoaded", () => { addVariantRow(); });
+
+function handleImageSelect(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) { alert("Image must be under 8 MB."); return; }
+    selectedImageFile = file;
+    const reader = new FileReader();
+    reader.onload = e => {
+        const preview = document.getElementById("upload-preview");
+        preview.src = e.target.result;
+        preview.style.display = "block";
+        document.querySelector("#upload-zone p").textContent = file.name;
+    };
+    reader.readAsDataURL(file);
+}
+
+function uploadToCloudinary(file, name) {
+    return new Promise((resolve, reject) => {
+        if (CLOUDINARY_CLOUD_NAME === "YOUR_CLOUD_NAME") {
+            reject(new Error("Cloudinary not configured. Open admin.html and set CLOUDINARY_CLOUD_NAME and CLOUDINARY_UPLOAD_PRESET at the top of the script."));
+            return;
+        }
+        const slug = name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+        const pid  = Date.now() + "_" + slug;
+        const fd   = new FormData();
+        fd.append("file",          file);
+        fd.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+        fd.append("folder",        "sgelar/products");
+        fd.append("public_id",     pid);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`);
+
+        document.getElementById("progress-wrap").style.display = "block";
+        xhr.upload.addEventListener("progress", e => {
+            if (e.lengthComputable) {
+                const pct = Math.round(e.loaded / e.total * 100);
+                document.getElementById("progress-fill").style.width = pct + "%";
+                document.getElementById("upload-pct").textContent = pct + "%";
+            }
+        });
+        xhr.addEventListener("load", () => {
+            try {
+                const res = JSON.parse(xhr.responseText);
+                if (res.secure_url) resolve(res.secure_url);
+                else reject(new Error(res.error?.message || "Upload failed"));
+            } catch (e) { reject(new Error("Invalid Cloudinary response")); }
+        });
+        xhr.addEventListener("error", () => reject(new Error("Network error during upload")));
+        xhr.send(fd);
+    });
+}
+
+async function saveProduct() {
+    const name     = document.getElementById("prod-name").value.trim();
+    const category = document.getElementById("prod-category").value;
+    const desc     = document.getElementById("prod-description").value.trim();
+    const stock    = parseInt(document.getElementById("prod-stock").value) || 0;
+    const featured = document.getElementById("prod-featured").value === "true";
+    const statusEl = document.getElementById("save-status");
+    const saveBtn  = document.getElementById("save-btn");
+
+    if (!name)     { setStatus("Product name is required.", false); return; }
+    if (!category) { setStatus("Please select a category.", false); return; }
+
+    // Collect variants
+    const rows = document.querySelectorAll("#variants-list .variant-row");
+    const variants = [];
+    for (const row of rows) {
+        const inputs = row.querySelectorAll("input");
+        const sz = inputs[0].value.trim();
+        const pr = parseFloat(inputs[1].value);
+        if (pr > 0) variants.push({ size: sz || "Standard", price: pr });
+    }
+    if (variants.length === 0) { setStatus("At least one size with a price > 0 is required.", false); return; }
+
+    saveBtn.disabled = true;
+    setStatus("Saving…", null);
+
+    try {
+        let imageUrl = null;
+        const docId = document.getElementById("edit-doc-id").value;
+
+        // Preserve existing imageUrl if editing and no new file chosen
+        if (docId && !selectedImageFile) {
+            const existing = await adminDb.collection("products").doc(docId).get();
+            imageUrl = existing.data()?.imageUrl || null;
+        }
+
+        if (selectedImageFile) {
+            setStatus("Uploading image…", null);
+            imageUrl = await uploadToCloudinary(selectedImageFile, name);
+        }
+
+        const payload = {
+            name, category, description: desc, stock, featured,
+            variants,
+            price: variants[0].price,
+            imageUrl,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        if (docId) {
+            await adminDb.collection("products").doc(docId).update(payload);
+        } else {
+            payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            await adminDb.collection("products").add(payload);
+        }
+
+        setStatus(docId ? "Product updated!" : "Product saved!", true);
+        loadProducts();
+        loadOverviewStats();
+        setTimeout(() => { resetProductForm(); showTab("products"); }, 900);
+    } catch(e) {
+        setStatus("Error: " + e.message, false);
+    }
+    saveBtn.disabled = false;
+}
+
+function setStatus(msg, ok) {
+    const el = document.getElementById("save-status");
+    el.textContent = msg;
+    el.className = ok === true ? "status-ok" : ok === false ? "status-err" : "";
+}
+
+function resetProductForm(addBlankRow = true) {
+    editingDocId = null;
+    selectedImageFile = null;
+    document.getElementById("edit-doc-id").value = "";
+    document.getElementById("add-product-title").textContent = "Add New Product";
+    document.getElementById("prod-name").value        = "";
+    document.getElementById("prod-category").value    = "";
+    document.getElementById("prod-description").value = "";
+    document.getElementById("prod-stock").value       = "";
+    document.getElementById("prod-featured").value    = "false";
+    document.getElementById("variants-list").innerHTML = "";
+    document.getElementById("prod-image-input").value = "";
+    document.getElementById("upload-preview").style.display = "none";
+    document.getElementById("upload-preview").src = "";
+    document.querySelector("#upload-zone p").textContent = "Click to choose an image";
+    document.getElementById("progress-wrap").style.display = "none";
+    document.getElementById("progress-fill").style.width = "0%";
+    document.getElementById("upload-pct").textContent = "";
+    document.getElementById("save-status").textContent = "";
+    if (addBlankRow) addVariantRow();
+}
+
+// ═══════════════════════════════════════════════════════
+//  ORDERS
+// ═══════════════════════════════════════════════════════
+async function loadOrders() {
+    const tbody = document.getElementById("orders-body");
+    try {
+        const snap = await adminDb.collection("orders")
+            .orderBy("createdAt", "desc").limit(200).get();
+        allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderOrders("all");
+    } catch(e) {
+        tbody.innerHTML = `<tr><td colspan="9" style="color:#ff5555;padding:20px;">Error: ${e.message}</td></tr>`;
+    }
+}
+
+function renderOrders(filter) {
+    const tbody = document.getElementById("orders-body");
+    const list  = filter === "all" ? allOrders : allOrders.filter(o => o.status === filter);
+    if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:20px;">No orders found.</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = list.map(o => {
+        const date  = o.createdAt ? new Date(o.createdAt.toDate()).toLocaleDateString("en-ZA") : "—";
+        const phone = o.customerPhone || o.customer_phone || "";
+        const waNum = phone.replace(/\D/g,"").replace(/^0/,"27");
+        const items = (o.itemsOrdered || o.items_ordered || "").slice(0,60);
+        const status= o.status || "pending";
+        return `<tr>
+            <td style="font-family:monospace;font-size:0.8rem;">${o.id.slice(0,10)}</td>
+            <td>${o.customerName || o.customer_name || "—"}</td>
+            <td>${phone ? `<a href="https://wa.me/${waNum}" target="_blank" style="color:var(--gold);">${phone}</a>` : "—"}</td>
+            <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${items || "—"}</td>
+            <td>${o.shippingMethod || o.shipping_method || "—"}</td>
+            <td>R${o.totalAmount || 0}</td>
+            <td><span class="badge badge-${status}">${status}</span></td>
+            <td>${date}</td>
+            <td>
+                <select class="status-select" onchange="updateOrderStatus('${o.id}',this.value)">
+                    <option value="pending"   ${status==="pending"   ?"selected":""}>Pending</option>
+                    <option value="confirmed" ${status==="confirmed" ?"selected":""}>Confirmed</option>
+                    <option value="delivered" ${status==="delivered" ?"selected":""}>Delivered</option>
+                    <option value="cancelled" ${status==="cancelled" ?"selected":""}>Cancelled</option>
+                </select>
+            </td>
+        </tr>`;
+    }).join("");
+}
+
+function filterOrders(filter, btn) {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderOrders(filter);
+}
+
+async function updateOrderStatus(docId, status) {
+    try {
+        await adminDb.collection("orders").doc(docId).update({ status });
+        // Update local cache
+        const order = allOrders.find(o => o.id === docId);
+        if (order) order.status = status;
+        loadOverviewStats();
+    } catch(e) { alert("Failed to update status: " + e.message); }
+}
+</script>
+</body>
+</html>

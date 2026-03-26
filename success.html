@@ -112,5 +112,10 @@
         const orderNum = urlParams.get('order') || 'SGELAR-' + Date.now();
         document.getElementById('order-number').textContent = orderNum;
     </script>
+
+    <script>
+        // Clear cart after successful payment
+        localStorage.removeItem("sgelar_cart");
+    </script>
 </body>
 </html>
