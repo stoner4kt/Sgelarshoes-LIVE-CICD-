@@ -84,25 +84,80 @@ function updateCartCount() {
 ========================= */
 document.addEventListener("DOMContentLoaded", () => {
     const hamburger = document.getElementById("hamburger");
-    const navLinks  = document.getElementById("nav-links");
+    const mobileNav = document.getElementById("mobile-nav");
+    if (hamburger && mobileNav) {
+        hamburger.addEventListener("click", () => {
+            hamburger.classList.toggle("open");
+            mobileNav.classList.toggle("open");
+            hamburger.setAttribute("aria-expanded", mobileNav.classList.contains("open") ? "true" : "false");
+        });
+        mobileNav.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                hamburger.classList.remove("open");
+                mobileNav.classList.remove("open");
+            });
+        });
+    }
 
-    if (hamburger) {
-        hamburger.onclick = () => navLinks.classList.toggle("active");
+    const mainNav = document.getElementById("main-nav");
+    if (mainNav) {
+        window.addEventListener("scroll", () => {
+            mainNav.classList.toggle("scrolled", window.scrollY > 10);
+        }, { passive: true });
     }
 
     const shopGrid = document.getElementById("product-grid");
     if (shopGrid) renderShop(shopGrid);
 
     const paystackBtn = document.getElementById("paystack-pay-btn");
-    if (paystackBtn) {
-        paystackBtn.addEventListener("click", payWithPaystack);
-    }
+    if (paystackBtn) paystackBtn.addEventListener("click", payWithPaystack);
 
     const cartItemsDiv = document.getElementById("cart-items");
-    if (cartItemsDiv) {
-        renderCart(cartItemsDiv);
+    if (cartItemsDiv) renderCart(cartItemsDiv);
+
+    const revealEls = document.querySelectorAll("[data-reveal]");
+    if (revealEls.length) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add("revealed");
+                    observer.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        revealEls.forEach(el => observer.observe(el));
     }
 
+    document.querySelectorAll(".stat-num[data-count]").forEach(el => {
+        const target = parseFloat(el.dataset.count);
+        const suffix = el.dataset.suffix || "";
+        const isDecimal = target % 1 !== 0;
+        let start = null;
+        const duration = 1800;
+        const obs = new IntersectionObserver(([entry]) => {
+            if (!entry.isIntersecting) return;
+            obs.unobserve(el);
+            const step = (timestamp) => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                const val = progress * target;
+                el.textContent = (isDecimal ? val.toFixed(1) : Math.floor(val)) + suffix;
+                if (progress < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+        }, { threshold: 0.5 });
+        obs.observe(el);
+    });
+
+    const heroBg = document.getElementById("hero-bg");
+    if (heroBg) {
+        window.addEventListener("scroll", () => {
+            heroBg.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+        }, { passive: true });
+    }
+
+    initCountdown();
+    initReviews();
     updateCartCount();
 });
 
@@ -415,3 +470,73 @@ window.payWithPaystack = async () => {
     });
     handler.openIframe();
 };
+
+
+function initCountdown() {
+    const daysEl = document.getElementById("cd-days");
+    const hoursEl = document.getElementById("cd-hours");
+    const minsEl = document.getElementById("cd-mins");
+    const secsEl = document.getElementById("cd-secs");
+    if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
+
+    const target = new Date();
+    target.setDate(target.getDate() + 7);
+
+    const tick = () => {
+        const now = new Date().getTime();
+        const diff = Math.max(0, target.getTime() - now);
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / (1000 * 60)) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+        daysEl.textContent = String(days).padStart(2, "0");
+        hoursEl.textContent = String(hours).padStart(2, "0");
+        minsEl.textContent = String(mins).padStart(2, "0");
+        secsEl.textContent = String(secs).padStart(2, "0");
+    };
+    tick();
+    setInterval(tick, 1000);
+}
+
+function initReviews() {
+    const reviewForm = document.getElementById("reviewForm");
+    const reviewsContainer = document.getElementById("reviewsContainer");
+    if (!reviewForm || !reviewsContainer) return;
+
+    const reviewsRef = collection(db, "reviews");
+    const q = query(reviewsRef, orderBy("createdAt", "desc"));
+
+    onSnapshot(q, (snapshot) => {
+        reviewsContainer.innerHTML = snapshot.docs.map((d) => {
+            const r = d.data();
+            const stars = "★".repeat(Number(r.rating || 5));
+            return `
+                <div class="swiper-slide card">
+                    <h4>${r.name || "Anonymous"}</h4>
+                    <p style="color:var(--gold)">${stars}</p>
+                    <p>${r.comment || ""}</p>
+                </div>
+            `;
+        }).join("");
+
+        if (window.Swiper) {
+            if (window.__reviewSwiper) window.__reviewSwiper.destroy(true, true);
+            window.__reviewSwiper = new Swiper(".review-swiper", {
+                slidesPerView: 1,
+                spaceBetween: 16,
+                pagination: { el: ".swiper-pagination", clickable: true },
+                breakpoints: { 720: { slidesPerView: 2 } }
+            });
+        }
+    });
+
+    reviewForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("reviewName").value.trim();
+        const rating = document.getElementById("reviewRating").value;
+        const comment = document.getElementById("reviewComment").value.trim();
+        if (!name || !rating || !comment) return;
+        await addDoc(reviewsRef, { name, rating, comment, createdAt: serverTimestamp() });
+        reviewForm.reset();
+    });
+}

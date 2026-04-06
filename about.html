@@ -114,144 +114,40 @@
     </script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar" role="navigation" aria-label="Main Navigation">
-        <a href="index.html" aria-label="SGELAR Shoes Home">
-            <img src="assets/img/logo.png" alt="SGELAR Shoes Logo" style="height: 40px;" width="auto" height="40">
-        </a>
-        <ul class="nav-links" id="nav-links" role="menubar">
-            <li role="none"><a href="index.html" role="menuitem">Home</a></li>
-            <li role="none"><a href="shop.html" role="menuitem">Shop Shoes</a></li>
-            <li role="none"><a href="about.html" role="menuitem" aria-current="page">About Us</a></li>
-            <li role="none"><a href="policies.html" role="menuitem">Policies</a></li>
-            <li role="none"><a href="cart.html" role="menuitem" aria-label="Shopping Cart">Cart <span id="cart-count" aria-live="polite">0</span></a></li>
-        </ul>
-        <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
-            <span></span><span></span><span></span>
-        </button>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="container">
-        <!-- About Sections -->
-        <section class="blog-section" aria-label="About SGELAR">
-            <article class="blog-row">
-                <div class="blog-image">
-                    <img src="assets/img/craftsmanship.jpg" alt="SGELAR Craftsmanship - Premium Leather School Shoes" loading="lazy">
-                </div>
-                <div class="blog-text">
-                    <h1>Our Craftsmanship</h1>
-                    <p>Every pair of SGELAR shoes is a result of meticulous South African handiwork. We use premium leather to ensure durability for the toughest school terms.</p> 
-                </div>
-            </article>
-            
-            <article class="blog-row">
-                <div class="blog-image">
-                    <img src="assets/img/community.jpg" alt="SGELAR Community Focus - Supporting Local South African Communities" loading="lazy">
-                </div>
-                <div class="blog-text">
-                    <h2>Community Focused</h2>
-                    <p>We believe quality education starts with quality footwear. By supporting local manufacturing, we invest back into our South African communities.</p>
-                </div>
-            </article>
-            
-            <article class="blog-row">
-                <div class="blog-image">
-                    <img src="assets/img/story.jpg" alt="SGELAR Founder Story" loading="lazy" onerror="this.src='https://via.placeholder.com/500x300?text=Craftsmanship'">
-                </div>
-                <div class="blog-text">
-                    <h2>Our Founder</h2>
-                    <p>Every pair of SGELAR shoes is a result of meticulous South African handiwork. We use premium leather to ensure durability for the toughest school terms.</p>
-                </div>
-            </article>
-            
-            <article class="blog-row">
-                <div class="blog-image">
-                    <img src="assets/img/ourvision.jpg" alt="SGELAR Vision - Quality Education Through Quality Footwear" loading="lazy">
-                </div>
-                <div class="blog-text">
-                    <h2>Our Vision</h2>
-                    <p>We believe quality education starts with quality footwear. By supporting local manufacturing, we invest back into our South African communities.</p>
-                </div>
-            </article>
-        </section>
-
-        <!-- Customer Reviews Section -->
-        <section class="reviews-section text-center" aria-labelledby="reviews-heading">
-            <h2 id="reviews-heading" style="color:var(--yellow)">Customer Reviews</h2>
-            <div class="swiper review-swiper">
-                <div class="swiper-wrapper" id="reviewsContainer" role="list" aria-label="Customer reviews"></div>
-                <div class="swiper-pagination" role="navigation" aria-label="Review pagination"></div>
-            </div>
-        </section>
-
-        <!-- Leave Review Section -->
-        <section class="leave-review card" style="max-width: 600px; margin: 50px auto;" aria-labelledby="review-form-heading">
-            <h3 id="review-form-heading">Leave a Review</h3>
-            <form id="reviewForm" aria-label="Submit your review">
-                <label for="reviewName" class="sr-only">Your Name</label>
-                <input type="text" id="reviewName" placeholder="Your Name" required aria-required="true">
-
-                <label for="reviewRating" class="sr-only">Rating</label>
-                <select id="reviewRating" required aria-required="true">
-                    <option value="">Rating</option>
-                    <option value="5">★★★★★ (5 stars)</option>
-                    <option value="4">★★★★☆ (4 stars)</option>
-                    <option value="3">★★★☆☆ (3 stars)</option>
-                    <option value="2">★★☆☆☆ (2 stars)</option>
-                    <option value="1">★☆☆☆☆ (1 star)</option>
-                </select>
-
-                <label for="reviewComment" class="sr-only">Your Review</label>
-                <textarea id="reviewComment" placeholder="Write your review..." required aria-required="true"></textarea>
-
-                <button type="submit">Submit Review</button>
-            </form>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer" role="contentinfo">
-        <div class="container footer-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; padding: 40px 0;">
-            <div>
-                <h3 style="color:var(--yellow)">SGELAR</h3>
-                <p>Premium South African School Shoes. Built for the journey.</p>
-            </div>
-            <div>
-                <h4 style="color:var(--white)">Quick Links</h4>
-                <ul style="list-style:none; padding:0;">
-                    <li><a href="shop.html">Shop All</a></li>
-                    <li><a href="about.html">About Us</a></li> 
-                    <li><a href="index.html#contact" aria-label="Contact SGELAR">Contact Us</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 style="color:var(--white)">Customer Care</h4>
-                <ul style="list-style:none; padding:0;">
-                    <li><a href="policies.html#shipping">Shipping Info</a></li>
-                    <li><a href="policies.html#returns">Returns & Refunds</a></li>
-                    <li><a href="policies.html#privacy">Privacy Policy</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="social-links" role="navigation" aria-label="Social Media Links">
-            <a href="https://wa.me/27810606488" aria-label="Contact us on WhatsApp" rel="noopener noreferrer" target="_blank"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
-            <a href="#" aria-label="Follow us on Instagram" rel="noopener noreferrer" target="_blank"><i class="fab fa-instagram" aria-hidden="true"></i></a>
-            <a href="https://www.facebook.com/Sgelar25?mibextid=ZbWKwL" aria-label="Like us on Facebook" rel="noopener noreferrer" target="_blank"><i class="fab fa-facebook" aria-hidden="true"></i></a>
-            <a href="https://www.tiktok.com/@sgela_premium?_r=1&_t=ZS-92h9hJSqzKy" aria-label="Follow us on TikTok" rel="noopener noreferrer" target="_blank"><i class="fab fa-tiktok" aria-hidden="true"></i></a>
-        </div>  
-        
-        <div style="text-align:center; border-top: 1px solid #333; padding: 20px;">
-            <p>&copy; 2024 SGELAR Shoes. Proudly South African 🇿🇦 | All Rights Reserved</p>
-            <p style="font-size: 0.9rem; margin-top: 10px;">
-                <a href="policies.html#privacy" style="color: var(--yellow);">Privacy Policy</a> | 
-                <a href="policies.html#terms" style="color: var(--yellow);">Terms & Conditions</a>
-            </p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script type="module" src="script.js"></script>
+<div class="announce-bar">Free shipping over R1000 • Built to Last • Nationwide Delivery</div>
+<nav class="navbar" id="main-nav" role="navigation" aria-label="Main Navigation">
+  <a href="index.html" class="brand" aria-label="SGELAR Shoes Home">
+    <img src="assets/img/logo.png" alt="SGELAR Shoes Logo" width="136" height="48">
+  </a>
+  <ul class="nav-links" id="nav-links" role="menubar">
+    <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+    <li role="none"><a href="shop.html" role="menuitem">Shop</a></li>
+    <li role="none"><a href="about.html" role="menuitem">About</a></li>
+    <li role="none"><a href="policies.html" role="menuitem">Policies</a></li>
+    <li role="none"><a href="cart.html" role="menuitem">Cart <span id="cart-count" aria-live="polite">0</span></a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div id="mobile-nav" class="mobile-nav" aria-label="Mobile Navigation">
+  <a href="index.html">Home</a>
+  <a href="shop.html">Shop</a>
+  <a href="about.html">About</a>
+  <a href="policies.html">Policies</a>
+  <a href="cart.html">Cart <span id="cart-count">0</span></a>
+</div>
+<main class="section container" data-reveal><p class="subtitle">About SGELAR</p><h1 class="section-title">Our Craft, Our Community</h1><div class="about-rows"><article class="blog-row"><img src="assets/img/craftsmanship.jpg" alt="craftsmanship" loading="lazy"><div><h2>Our Craftsmanship</h2><p>Premium leather, reinforced stitching and comfort-first design.</p></div></article><article class="blog-row"><img src="assets/img/community.jpg" alt="community" loading="lazy"><div><h2>Community Focused</h2><p>We create value through local manufacturing and trusted service.</p></div></article></div><section class="reviews-section"><h2>Customer Reviews</h2><div class="swiper review-swiper"><div class="swiper-wrapper" id="reviewsContainer"></div><div class="swiper-pagination"></div></div></section><section class="leave-review card"><h3>Leave a Review</h3><form id="reviewForm"><input type="text" id="reviewName" placeholder="Your Name" required><select id="reviewRating" required><option value="">Rating</option><option value="5">★★★★★</option><option value="4">★★★★☆</option><option value="3">★★★☆☆</option><option value="2">★★☆☆☆</option><option value="1">★☆☆☆☆</option></select><textarea id="reviewComment" placeholder="Write your review..." required></textarea><button type="submit" class="btn">Submit Review</button></form></section></main>
+<footer class="footer" role="contentinfo" data-reveal>
+  <div class="container footer-grid">
+    <div><h3>SGELAR</h3><p>Premium South African school shoes crafted for everyday durability and comfort.</p></div>
+    <div><h4>Shop</h4><ul><li><a href="shop.html">All Products</a></li><li><a href="cart.html">Cart</a></li><li><a href="about.html">Our Story</a></li></ul></div>
+    <div><h4>Policies</h4><ul><li><a href="policies.html#shipping">Shipping</a></li><li><a href="policies.html#returns">Returns</a></li><li><a href="policies.html#privacy">Privacy</a></li></ul></div>
+    <div><h4>Contact</h4><ul><li><a href="mailto:info@sgelarshoes.co.za">info@sgelarshoes.co.za</a></li><li><a href="https://wa.me/27810606488" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
+  </div>
+  <div class="social-links"><a href="https://wa.me/27810606488" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i></a><a href="https://www.facebook.com/Sgelar25" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook" aria-hidden="true"></i></a><a href="https://www.tiktok.com/@sgela_premium" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok" aria-hidden="true"></i></a></div>
+  <div class="footer-legal">© 2026 SGELAR Shoes • <a href="policies.html#terms">Terms</a> • <a href="policies.html#privacy">Privacy</a> • <a href="sitemap.xml">Sitemap</a></div>
+</footer>
+<a class="whatsapp-float" href="https://wa.me/27810606488" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
