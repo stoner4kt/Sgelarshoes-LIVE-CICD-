@@ -82,7 +82,7 @@
   <a href="shop.html">Shop</a>
   <a href="about.html">About</a>
   <a href="policies.html">Policies</a>
-  <a href="cart.html">Cart <span id="cart-count">0</span></a>
+  <a href="cart.html">Cart <span class="cart-count">0</span></a>
 </div>
 <main class="section container cart-layout" data-reveal><section><p class="subtitle">Checkout</p><h1 class="section-title">Your Cart</h1><div id="cart-items" role="list"></div></section><aside class="cart-summary"><h3>Order Summary</h3><p>Subtotal: R<span id="cart-total">0</span></p><p>Shipping: R<span id="shipping-fee">0</span></p><p class="final">Total: R<span id="cart-total-final">0</span></p><div class="checkout-form"><input id="cust-name" type="text" placeholder="Full Name" required><input id="cust-email" type="email" placeholder="Email Address" required><input id="cust-phone" type="tel" placeholder="Phone Number" required><label><input type="radio" name="shipping" value="collection" onclick="toggleAddressFields(false)" checked> Collection</label><label><input type="radio" name="shipping" value="shipping" onclick="toggleAddressFields(true)"> Delivery</label><div id="address-section" style="display:none;"><textarea id="cust-address" placeholder="Delivery Address"></textarea></div><button id="paystack-pay-btn" type="button" class="btn">Proceed to Secure Payment</button></div></aside></main>
 <footer class="footer" role="contentinfo" data-reveal>

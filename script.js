@@ -74,7 +74,7 @@ function saveCart(cart) {
 
 function updateCartCount() {
     const count = getCart().length;
-    document.querySelectorAll("#cart-count").forEach(el => {
+    document.querySelectorAll("#cart-count, .cart-count").forEach(el => {
         el.innerText = `CART (${count})`;
     });
 }
@@ -86,16 +86,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const hamburger = document.getElementById("hamburger");
     const mobileNav = document.getElementById("mobile-nav");
     if (hamburger && mobileNav) {
+        const setMenuState = (isOpen) => {
+            hamburger.classList.toggle("open", isOpen);
+            mobileNav.classList.toggle("open", isOpen);
+            hamburger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            document.body.classList.toggle("menu-open", isOpen);
+        };
+
         hamburger.addEventListener("click", () => {
-            hamburger.classList.toggle("open");
-            mobileNav.classList.toggle("open");
-            hamburger.setAttribute("aria-expanded", mobileNav.classList.contains("open") ? "true" : "false");
+            setMenuState(!mobileNav.classList.contains("open"));
         });
+
         mobileNav.querySelectorAll("a").forEach(link => {
-            link.addEventListener("click", () => {
-                hamburger.classList.remove("open");
-                mobileNav.classList.remove("open");
-            });
+            link.addEventListener("click", () => setMenuState(false));
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && mobileNav.classList.contains("open")) {
+                setMenuState(false);
+                hamburger.focus();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 920 && mobileNav.classList.contains("open")) {
+                setMenuState(false);
+            }
         });
     }
 
