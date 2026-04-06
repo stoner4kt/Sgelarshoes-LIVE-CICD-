@@ -63,144 +63,40 @@
     </script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar" role="navigation" aria-label="Main Navigation">
-        <a href="index.html" aria-label="SGELAR Shoes Home">
-            <img src="assets/img/logo.png" alt="SGELAR Shoes Logo" style="height: 40px;" width="auto" height="40">
-        </a>
-        <ul class="nav-links" id="nav-links" role="menubar">
-            <li role="none"><a href="index.html" role="menuitem">Home</a></li>
-            <li role="none"><a href="shop.html" role="menuitem">Shop Shoes</a></li>
-            <li role="none"><a href="policies.html" role="menuitem">Policies</a></li>
-            <li role="none"><a href="about.html" role="menuitem">About Us</a></li>
-            <li role="none"><a href="cart.html" role="menuitem" aria-current="page">Cart <span id="cart-count" aria-live="polite">0</span></a></li>
-        </ul>
-        <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
-            <span></span><span></span><span></span>
-        </button>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="container">
-        <h1 class="section-title" style="color: var(--yellow); text-align: center;">Shopping Cart</h1>
-
-        <div id="cart-items-wrapper">
-            <div id="cart-items" role="list" aria-label="Cart items"></div>
-        </div>
-
-        <div class="cart-summary" style="background: var(--dark-grey); padding: 30px; border-radius: 12px; margin-top: 30px; border: 1px solid var(--yellow);">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                <span>Subtotal:</span>
-                <span>R<span id="cart-total" aria-live="polite">0</span></span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; font-size: 1.4rem; color: var(--yellow);">
-                <span>Total:</span>
-                <span>R<span id="cart-total-final" aria-live="polite">0</span></span>
-            </div>
-
-            <div class="checkout-form-container">
-                <h2><i class="fas fa-truck" aria-hidden="true"></i> Delivery Information</h2>
-                
-                <div class="form-group">
-                    <label for="cust-name" class="sr-only">Full Name</label>
-                    <input type="text" id="cust-name" placeholder="Full Name (e.g., Thabo Mokoena)" required aria-required="true">
-                </div>
-                
-                <!-- Honeypot field for spam prevention -->
-                <div class="field-wrapper" aria-hidden="true" style="position: absolute; left: -9999px;">
-                    <label for="customer_middle_name">Middle Name</label>
-                    <input type="text" name="customer_middle_name" id="customer_middle_name" tabindex="-1" autocomplete="off">
-                </div>
-                
-                <div class="form-group">
-                    <label for="cust-email" class="sr-only">Email Address</label>
-                    <input type="email" id="cust-email" placeholder="Email Address" required aria-required="true">
-                </div>
-                
-                <div class="form-group">
-                    <label for="cust-phone" class="sr-only">Phone Number</label>
-                    <input type="tel" id="cust-phone" placeholder="WhatsApp / Phone Number" required aria-required="true">
-                </div>
-
-                <fieldset class="shipping-options">
-                    <legend><h3>Delivery Method</h3></legend>
-
-                    <label>
-                        <input type="radio" name="shipping" value="collection" onclick="toggleAddressFields(false)" checked>
-                        In-store Collection (Free)
-                    </label>
-                    <ul>
-                        <label>
-                            <input type="radio" name="shipping" value="shipping" onclick="toggleAddressFields(true)">
-                            Shipping (Delivery Calculated by items in cart)
-                        </label>
-                    </ul>
-                    <p><strong>Shipping Fee:</strong> R<span id="shipping-fee" aria-live="polite">0</span></p>
-                </fieldset>
-
-                <div id="address-section" style="display: none;">
-                    <div class="form-group">
-                        <label for="cust-address" class="sr-only">Delivery Address</label>
-                        <textarea id="cust-address" placeholder="Full Address (Street name, Suburb, City, Postal Code)" aria-describedby="address-help"></textarea>
-                        <small id="address-help">Please ensure your address is complete and accurate</small>
-                    </div>
-                </div>
-
-                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
-                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">
-                        * Please ensure your address is correct. We deliver nationwide in South Africa.
-                    </p>
-                    <button type="button" id="paystack-pay-btn" style="width: 100%; font-weight: bold; background: #28a745;" aria-label="Proceed to secure payment">
-                        Proceed to Secure Payment
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
-    
-    <!-- Footer -->
-    <footer class="footer" role="contentinfo">
-        <div class="container footer-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; padding: 40px 0;">
-            <div>
-                <h3 style="color:var(--yellow)">SGELAR</h3>
-                <p>Premium South African School Shoes. Built for the journey.</p>
-            </div>
-            <div>
-                <h4 style="color:var(--white)">Quick Links</h4>
-                <ul style="list-style:none; padding:0;">
-                    <li><a href="shop.html">Shop All</a></li>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="index.html#contact" aria-label="Contact SGELAR">Contact Us</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 style="color:var(--white)">Customer Care</h4>
-                <ul style="list-style:none; padding:0;">
-                    <li><a href="policies.html#shipping">Shipping Info</a></li>
-                    <li><a href="policies.html#returns">Returns & Refunds</a></li>
-                    <li><a href="policies.html#privacy">Privacy Policy</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="social-links" role="navigation" aria-label="Social Media Links">
-            <a href="https://wa.me/27810606488" aria-label="Contact us on WhatsApp" rel="noopener noreferrer" target="_blank"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
-            <a href="#" aria-label="Follow us on Instagram" rel="noopener noreferrer" target="_blank"><i class="fab fa-instagram" aria-hidden="true"></i></a>
-            <a href="https://www.facebook.com/Sgelar25?mibextid=ZbWKwL" aria-label="Like us on Facebook" rel="noopener noreferrer" target="_blank"><i class="fab fa-facebook" aria-hidden="true"></i></a>
-            <a href="https://www.tiktok.com/@sgela_premium?_r=1&_t=ZS-92h9hJSqzKy" aria-label="Follow us on TikTok" rel="noopener noreferrer" target="_blank"><i class="fab fa-tiktok" aria-hidden="true"></i></a>
-        </div>  
-        
-        <div style="text-align:center; border-top: 1px solid #333; padding: 20px;">
-            <p>&copy; 2024 SGELAR Shoes. Proudly South African 🇿🇦 | All Rights Reserved</p>
-            <p style="font-size: 0.9rem; margin-top: 10px;">
-                <a href="policies.html#privacy" style="color: var(--yellow);">Privacy Policy</a> | 
-                <a href="policies.html#terms" style="color: var(--yellow);">Terms & Conditions</a>
-            </p>
-        </div>
-    </footer>
-
-    <!-- Paystack & Scripts -->
-    <script src="https://js.paystack.co/v2/inline.js"></script>
-    <script type="module" src="script.js"></script>
+<div class="announce-bar">Free shipping over R1000 • Built to Last • Nationwide Delivery</div>
+<nav class="navbar" id="main-nav" role="navigation" aria-label="Main Navigation">
+  <a href="index.html" class="brand" aria-label="SGELAR Shoes Home">
+    <img src="assets/img/logo.png" alt="SGELAR Shoes Logo" width="136" height="48">
+  </a>
+  <ul class="nav-links" id="nav-links" role="menubar">
+    <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+    <li role="none"><a href="shop.html" role="menuitem">Shop</a></li>
+    <li role="none"><a href="about.html" role="menuitem">About</a></li>
+    <li role="none"><a href="policies.html" role="menuitem">Policies</a></li>
+    <li role="none"><a href="cart.html" role="menuitem">Cart <span id="cart-count" aria-live="polite">0</span></a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<div id="mobile-nav" class="mobile-nav" aria-label="Mobile Navigation">
+  <a href="index.html">Home</a>
+  <a href="shop.html">Shop</a>
+  <a href="about.html">About</a>
+  <a href="policies.html">Policies</a>
+  <a href="cart.html">Cart <span id="cart-count">0</span></a>
+</div>
+<main class="section container cart-layout" data-reveal><section><p class="subtitle">Checkout</p><h1 class="section-title">Your Cart</h1><div id="cart-items" role="list"></div></section><aside class="cart-summary"><h3>Order Summary</h3><p>Subtotal: R<span id="cart-total">0</span></p><p>Shipping: R<span id="shipping-fee">0</span></p><p class="final">Total: R<span id="cart-total-final">0</span></p><div class="checkout-form"><input id="cust-name" type="text" placeholder="Full Name" required><input id="cust-email" type="email" placeholder="Email Address" required><input id="cust-phone" type="tel" placeholder="Phone Number" required><label><input type="radio" name="shipping" value="collection" onclick="toggleAddressFields(false)" checked> Collection</label><label><input type="radio" name="shipping" value="shipping" onclick="toggleAddressFields(true)"> Delivery</label><div id="address-section" style="display:none;"><textarea id="cust-address" placeholder="Delivery Address"></textarea></div><button id="paystack-pay-btn" type="button" class="btn">Proceed to Secure Payment</button></div></aside></main>
+<footer class="footer" role="contentinfo" data-reveal>
+  <div class="container footer-grid">
+    <div><h3>SGELAR</h3><p>Premium South African school shoes crafted for everyday durability and comfort.</p></div>
+    <div><h4>Shop</h4><ul><li><a href="shop.html">All Products</a></li><li><a href="cart.html">Cart</a></li><li><a href="about.html">Our Story</a></li></ul></div>
+    <div><h4>Policies</h4><ul><li><a href="policies.html#shipping">Shipping</a></li><li><a href="policies.html#returns">Returns</a></li><li><a href="policies.html#privacy">Privacy</a></li></ul></div>
+    <div><h4>Contact</h4><ul><li><a href="mailto:info@sgelarshoes.co.za">info@sgelarshoes.co.za</a></li><li><a href="https://wa.me/27810606488" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
+  </div>
+  <div class="social-links"><a href="https://wa.me/27810606488" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i></a><a href="https://www.facebook.com/Sgelar25" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook" aria-hidden="true"></i></a><a href="https://www.tiktok.com/@sgela_premium" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok" aria-hidden="true"></i></a></div>
+  <div class="footer-legal">© 2026 SGELAR Shoes • <a href="policies.html#terms">Terms</a> • <a href="policies.html#privacy">Privacy</a> • <a href="sitemap.xml">Sitemap</a></div>
+</footer>
+<a class="whatsapp-float" href="https://wa.me/27810606488" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
