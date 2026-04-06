@@ -507,17 +507,32 @@ function initReviews() {
     const q = query(reviewsRef, orderBy("createdAt", "desc"));
 
     onSnapshot(q, (snapshot) => {
-        reviewsContainer.innerHTML = snapshot.docs.map((d) => {
-            const r = d.data();
-            const stars = "★".repeat(Number(r.rating || 5));
-            return `
-                <div class="swiper-slide card">
-                    <h4>${r.name || "Anonymous"}</h4>
-                    <p style="color:var(--gold)">${stars}</p>
-                    <p>${r.comment || ""}</p>
-                </div>
-            `;
-        }).join("");
+        reviewsContainer.textContent = "";
+
+        snapshot.docs.forEach((d) => {
+            const r = d.data() || {};
+            const safeName = String(r.name || "Anonymous");
+            const safeComment = String(r.comment || "");
+            const numericRating = Number(r.rating || 5);
+            const boundedRating = Number.isFinite(numericRating) ? Math.max(1, Math.min(5, Math.round(numericRating))) : 5;
+            const stars = "★".repeat(boundedRating);
+
+            const slide = document.createElement("div");
+            slide.className = "swiper-slide card";
+
+            const nameEl = document.createElement("h4");
+            nameEl.textContent = safeName;
+
+            const ratingEl = document.createElement("p");
+            ratingEl.style.color = "var(--gold)";
+            ratingEl.textContent = stars;
+
+            const commentEl = document.createElement("p");
+            commentEl.textContent = safeComment;
+
+            slide.append(nameEl, ratingEl, commentEl);
+            reviewsContainer.appendChild(slide);
+        });
 
         if (window.Swiper) {
             if (window.__reviewSwiper) window.__reviewSwiper.destroy(true, true);
