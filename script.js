@@ -38,7 +38,7 @@ let selectedShipping = "collection";
 /* =========================
    LOCAL IMAGE MAP
 ========================= */
-const localImages = {
+/*const localImages = {
     "Sgelar The Classic Derby": "assets/img/shoe1.jpg",
     "Sgelar The Classic Derby Kids": "assets/img/shoe1.jpg",
     "Sgelar lace up": "assets/img/shoe2.jpg",
